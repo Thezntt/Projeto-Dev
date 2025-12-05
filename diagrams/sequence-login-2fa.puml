@@ -1,0 +1,30 @@
+@startuml
+title Sequence: Login with 2FA (simulated)
+actor User
+participant Frontend
+participant "Backend (API)" as Backend
+database "MongoDB" as DB
+
+User -> Frontend: Enter email & password
+Frontend -> Backend: POST /api/user/login {email,password}
+Backend -> DB: find user by email
+DB --> Backend: user record (including password hash)
+alt password valid
+    Backend -> Backend: generate 6-digit 2FA code + expiry
+    Backend -> DB: save twoFA.code & twoFA.expires
+    Backend --> Frontend: 200 {status: "2FA_REQUIRED", message: "Enter code sent to authenticator app"}
+    note over Frontend: In a real app the code would be shown in an authenticator app or sent via SMS/email.
+    User -> Frontend: Enter 2FA code
+    Frontend -> Backend: POST /api/user/verify-2fa {email, code}
+    Backend -> DB: find user and verify code & expiry
+    alt code valid
+        Backend -> Backend: sign JWT (id,email)
+        Backend --> Frontend: 200 {token}
+    else invalid/expired
+        Backend --> Frontend: 401 {message: "Invalid or expired 2FA code"}
+    end
+else invalid password
+    Backend --> Frontend: 401 {message: "Invalid credentials"}
+end
+
+@enduml

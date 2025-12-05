@@ -1,0 +1,40 @@
+@startuml
+title Class Diagram - Backend
+
+class User {
+  +ObjectId _id
+  +String username
+  +String email
+  -String password
+  +String cpf
+  +String[] preferences
+  +String twoFACode
+  +Date twoFAExpires
+  +Date createdAt
+  +Date updatedAt
+}
+
+class Product {
+  +ObjectId _id
+  +String name
+  +String description
+  +Number price
+  +String category
+  +Date expirationDate
+}
+
+class Promotion {
+  +ObjectId _id
+  +ObjectId productId
+  +Number discountPercentage
+  +Date startDate
+  +Date endDate
+  +String[] targetPreferences
+  +ObjectId[] targetUserIds
+}
+
+User "1" -- "*" Promotion : receives >
+Product "1" -- "*" Promotion : has >
+User "1" -- "*" Product : purchases (history)
+
+@enduml

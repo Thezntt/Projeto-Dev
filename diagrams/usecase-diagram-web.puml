@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+actor User
+actor Admin
+actor MobileUser as Mobile
+rectangle WebApp {
+  usecase "Sign Up" as SU
+  usecase "Login" as L
+  usecase "Enter 2FA Code" as FA
+  usecase "View Home (Personalized Promotions)" as VH
+  usecase "Logout" as LO
+}
+rectangle AdminPanel {
+  usecase "Create/Edit Products" as CP
+  usecase "Create/Edit Promotions" as PR
+  usecase "Manage Users" as MU
+}
+User --> SU
+User --> L
+L .> FA : <<extend>>
+User --> VH
+User --> LO
+Admin --> CP
+Admin --> PR
+Admin --> MU
+Mobile --> L
+Mobile --> VH
+@enduml

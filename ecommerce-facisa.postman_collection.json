@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "e22325e3-fa2d-4f55-a0cd-aae3825a464c",
+		"name": "ecommerce-facisa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46083875",
+		"_collection_link": "https://brenobarbosa-8228171.postman.co/workspace/facisa-ecommerce~9133ee91-a7d5-4804-a7ba-0575d7c6f75b/collection/46083875-e22325e3-fa2d-4f55-a0cd-aae3825a464c?action=share&source=collection_link&creator=46083875"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Finds all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJydW5vQG1haWwuY29tIiwiaWF0IjoxNzY0ODQ5MTEzLCJleHAiOjE3NjQ4NTI3MTN9.EVuqSLschEn9ud1IZqrolQgHSonNetsdEsElNE3ICeA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finds user by email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ3NzU2MTksImV4cCI6MTc2NDc3OTIxOX0.onHFepMSD-U9LYeQAdXqw_ebSEbpQD1Yv70eGZ0R_jM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/john@mail.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"john@mail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"John\",\r\n    \"email\": \"john@mail.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"bruno@mail.com\",\r\n    \"password\": \"test1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updates a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ4NDIyNTksImV4cCI6MTc2NDg0NTg1OX0.eYcMG_oq47bjewZRD85shsXIlja8sMh0-tu9ghqdKHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"John Marston\",\r\n    \"email\": \"john@mail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/john@mail.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"john@mail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ4NDIyNTksImV4cCI6MTc2NDg0NTg1OX0.eYcMG_oq47bjewZRD85shsXIlja8sMh0-tu9ghqdKHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/bruno@mail.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"bruno@mail.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Finds all products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJydW5vQG1haWwuY29tIiwiaWF0IjoxNzY0ODQ3ODUyLCJleHAiOjE3NjQ4NTE0NTJ9.xv21e7bYSTIu_yuPsNTVmDlsigkt1bgpA_X_0pWeCaU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/product",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finds one product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ4NDIyNTksImV4cCI6MTc2NDg0NTg1OX0.eYcMG_oq47bjewZRD85shsXIlja8sMh0-tu9ghqdKHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/product/693164bc0a1d8b7f0330a085",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"693164bc0a1d8b7f0330a085"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creates a Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJydW5vQG1haWwuY29tIiwiaWF0IjoxNzY0ODQ3ODUyLCJleHAiOjE3NjQ4NTE0NTJ9.xv21e7bYSTIu_yuPsNTVmDlsigkt1bgpA_X_0pWeCaU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"rice 1kg\",\r\n    \"description\": \"1 Kilogram of Chinese Rice\",\r\n    \"price\": 10.00,\r\n    \"countInStock\": 100,\r\n    \"expirationDate\": \"2026/12/21\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/product",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updates one product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ4NDIyNTksImV4cCI6MTc2NDg0NTg1OX0.eYcMG_oq47bjewZRD85shsXIlja8sMh0-tu9ghqdKHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Sony Speakers\",\r\n    \"description\": \"bluetooth speakers\",\r\n    \"price\": 105,\r\n    \"countInStock\": 20\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/product/693164bc0a1d8b7f0330a085",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"693164bc0a1d8b7f0330a085"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes one product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AbWFpbC5jb20iLCJpYXQiOjE3NjQ4NDIyNTksImV4cCI6MTc2NDg0NTg1OX0.eYcMG_oq47bjewZRD85shsXIlja8sMh0-tu9ghqdKHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/product/6931678a65b72e2093d6e6d5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"6931678a65b72e2093d6e6d5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
