@@ -5,8 +5,15 @@ const promotionController = {
   // retorna promoções filtradas para o usuário autenticado
   findAll: async (req, res) => {
     try {
-      const user = req.user || {};
-      const userId = user.id;
+      const user = req.user;
+      const userId = user && user.id;
+      // If not authenticated, do not expose promotions (discounts require login)
+      if (!userId) return res.json([]);
+      // If admin, return all promotions (populate product and assigned users)
+      if (user.role === 'admin') {
+        const promotions = await Promotion.find({}).populate('productId').populate('targetUserIds', 'username email cpf role');
+        return res.json(promotions);
+      }
 
       // Build query: match promotions that target the user's preferences or specific userId, or have no specific targets (global)
       let query = {

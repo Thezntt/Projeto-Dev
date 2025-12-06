@@ -1,25 +1,23 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-const middleware = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    
-    if (!authHeader) {
-        return res.status(401).json({ message: "Authorization header missing" });
-    }
+export default function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
 
+  // If no Authorization header provided, treat request as unauthenticated
+  // but allow the route to decide (some routes are public).
+  if (!authHeader) {
+    req.user = null;
+    return next();
+  }
 
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: "Token missing" });
-    }
+  const token = authHeader.split(" ")[1];
 
-    try {
-        const user = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = user; 
-        next(); 
-    } catch (err) {
-        return res.status(403).json({ message: "Invalid or expired token" });
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    // Invalid token: respond with 401 so clients know token is bad
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 }
-
-export default middleware;

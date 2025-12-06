@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -25,21 +26,15 @@ async function run() {
     { name: 'Maçã', description: 'Maçã gala', price: 3.5, category: 'frutas', expirationDate: new Date('2025-12-15') },
   ]);
 
-  // Create users
-  const adminPass = await bcrypt.hash('admin123', 10);
-  const userPass = await bcrypt.hash('user123', 10);
+  // Create admin user
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+  const adminPassword = process.env.ADMIN_PASSWORD || crypto.randomBytes(8).toString('hex'); // Senha aleatória
+  const adminPassHash = await bcrypt.hash(adminPassword, 10);
 
-  const admin = await User.create({ username: 'admin', email: 'admin@example.com', password: adminPass, cpf: '00000000000', role: 'admin', preferences: [] });
-  const user = await User.create({ username: 'joao', email: 'joao@example.com', password: userPass, cpf: '11111111111', role: 'user', preferences: ['carnes'] });
-
-  // Create promotions
-  const promo = await Promotion.create({ productId: products[0]._id, discountPercentage: 20, startDate: new Date('2025-12-01'), endDate: new Date('2025-12-31'), targetPreferences: ['carnes'], targetUserIds: [] });
+  const admin = await User.create({ username: 'admin', email: adminEmail, password: adminPassHash, cpf: '00000000000', role: 'admin', preferences: [] });
 
   console.log('Seed completed:');
-  console.log('Admin:', admin.email, 'pwd: admin123');
-  console.log('User:', user.email, 'pwd: user123');
-  console.log('Products:', products.map(p => p.name));
-  console.log('Promotion created for product:', products[0].name);
+  console.log('Admin:', admin.email, 'Senha gerada:', adminPassword);
 
   await mongoose.disconnect();
   process.exit(0);

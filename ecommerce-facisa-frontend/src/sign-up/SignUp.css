@@ -1,16 +1,17 @@
-.signup-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-}
-
-.signup-container {
-  display: flex;
-  width: 60%;
-  height: 60%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  overflow: hidden;
-}
+.signup-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f6fbff 0%, #ffffff 100%);padding:24px}
+.login-card{width:980px;max-width:100%;display:flex;border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(16,24,40,0.08);background:#fff}
+.brand-panel{background:linear-gradient(180deg,#007BFF 0%, #2aa1ff 100%);color:#fff;width:360px;padding:34px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.brand-icon{width:88px;height:88px;background:rgba(255,255,255,0.12);border-radius:999px;display:flex;align-items:center;justify-content:center}
+.brand-title{font-size:20px;margin:0;font-weight:700}
+.brand-sub{font-size:13px;margin:0;opacity:0.95}
+.form-panel{flex:1;padding:36px 42px;display:flex;flex-direction:column;justify-content:center}
+.form-panel h3{margin:0 0 14px 0;font-size:20px}
+.form{display:flex;flex-direction:column;gap:12px}
+.input-label{font-size:12px;color:#334155}
+.input{padding:12px 14px;border-radius:8px;border:1px solid #e6e9ef;background:#fff;font-size:14px;outline:none}
+.input:focus{box-shadow:0 6px 14px rgba(16,24,40,0.06);border-color:#9bbcf7}
+.primary-btn{margin-top:8px;padding:12px 16px;border-radius:10px;border:none;background:linear-gradient(90deg,#0066d6,#0088ff);color:#fff;font-weight:600;cursor:pointer}
+.primary-btn:disabled{opacity:0.6;cursor:default}
+.alt-actions{margin-top:14px;display:flex;align-items:center;gap:8px}
+.link-btn{border:none;background:transparent;color:#0066d6;font-weight:600;cursor:pointer}
+@media(max-width:720px){.login-card{flex-direction:column}.brand-panel{width:100%;padding:22px}.form-panel{padding:22px}}

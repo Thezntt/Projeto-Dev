@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Home.css";
 
 interface Product {
   _id: string;
@@ -8,6 +9,7 @@ interface Product {
   price: number;
   description: string;
   category: string;
+  image?: string;
 }
 
 interface Promotion {
@@ -25,22 +27,24 @@ export default function Home() {
   const [others, setOthers] = useState<Product[]>([]);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        if (!token) {
-          navigate("/");
-          return;
+        // buscar produtos (com token se houver para recomendações), buscar promoções somente se logado
+        const prodReq = token
+          ? axios.get("http://localhost:3000/api/products", { headers: { Authorization: `Bearer ${token}` } })
+          : axios.get("http://localhost:3000/api/products");
+
+        let promosReq = Promise.resolve({ data: [] as any });
+        if (token) {
+          promosReq = axios.get("http://localhost:3000/api/promotions", { headers: { Authorization: `Bearer ${token}` } });
         }
 
-        // buscar produtos e promoções em paralelo
-        const [productsRes, promosRes] = await Promise.all([
-          axios.get("http://localhost:3000/api/products", { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get("http://localhost:3000/api/promotions", { headers: { Authorization: `Bearer ${token}` } })
-        ]);
+        const [productsRes, promosRes] = await Promise.all([prodReq, promosReq]);
 
         const productsData = productsRes.data;
         if (productsData.recommended || productsData.others) {
@@ -55,10 +59,11 @@ export default function Home() {
 
       } catch (error: any) {
         console.error("Erro ao buscar dados:", error);
+        // If token is invalid or expired, remove it silently and continue as visitor
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-          alert("Sua sessão expirou. Faça login novamente.");
           localStorage.removeItem("token");
-          navigate("/");
+          // do not navigate or show blocking alerts here; Home is public
+          setPromotions([]);
         }
       } finally {
         setLoading(false);
@@ -68,76 +73,135 @@ export default function Home() {
     fetchData();
   }, [navigate]);
 
-  if (loading) return <p>Carregando ofertas...</p>;
+  if (loading) return <p className="home-loading">Carregando ofertas...</p>;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
+  const filtered = (list: Product[]) => {
+    if (!query) return list;
+    const q = query.toLowerCase();
+    return list.filter((p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+  };
+
   const formatCurrency = (value: number) => `R$ ${value.toFixed(2)}`;
 
+  const imageUrl = (img?: string) => {
+    if (!img) return undefined;
+    if (img.startsWith('http')) return img;
+    return `http://localhost:3000${img}`;
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <h1 style={{ margin: 0 }}>Bem-vindo ao Supermercado!</h1>
-        <button onClick={handleLogout} style={{ padding: "8px 12px", borderRadius: 6, border: "1px solid #ccc", background: "white", cursor: "pointer" }}>
-          Sair
-        </button>
-      </div>
-
-      {promotions.length > 0 && (
-        <div style={{ marginBottom: "30px", padding: "12px", borderRadius: 8, background: "#fff7e6" }}>
-          <h2 style={{ marginTop: 0 }}>🔥 Promoções para você</h2>
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            {promotions.map((promo) => {
-              const product = promo.product;
-              const discounted = +(product.price * (1 - promo.discountPercentage / 100)).toFixed(2);
-              return (
-                <div key={promo._id} className="card" style={{ border: "1px solid #f0c36d", padding: "10px", width: "220px", background: "#fff" }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ margin: 0 }}>{product.name}</h3>
-                    <span style={{ background: '#ffdd57', padding: '4px 8px', borderRadius: 6 }}>{promo.discountPercentage}%</span>
-                  </div>
-                  <p style={{ marginTop: 6 }}>{product.description}</p>
-                  <p style={{ margin: 0 }}><small>De: <s>{formatCurrency(product.price)}</s></small></p>
-                  <p style={{ marginTop: 4 }}><strong>Por: {formatCurrency(discounted)}</strong></p>
-                  <button>Comprar</button>
-                </div>
-              );
-            })}
-          </div>
+    <div className="home-page">
+      <nav className="home-nav">
+        <div className="nav-left">
+          <h1 className="brand">
+            <svg className="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6 6h15l-1.5 9h-11L6 6z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+              <circle cx="10" cy="19" r="1" fill="currentColor" />
+              <circle cx="18" cy="19" r="1" fill="currentColor" />
+            </svg>
+            Supermercado Array
+          </h1>
         </div>
-      )}
+        <div className="nav-right">
+          <input className="search-input" placeholder="Busque produtos, marcas ou categorias" value={query} onChange={(e) => setQuery(e.target.value)} />
+          {localStorage.getItem('token') ? (
+            <button className="nav-button" onClick={handleLogout}>Sair</button>
+          ) : (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="nav-button" onClick={() => navigate('/login')}>Entrar</button>
+              <button className="nav-button" onClick={() => navigate('/signup')}>Criar Conta</button>
+            </div>
+          )}
+        </div>
+      </nav>
 
-      {recommended.length > 0 && (
-        <div style={{ marginBottom: "40px", backgroundColor: "#f0f8ff", padding: "10px", borderRadius: "8px" }}>
-          <h2 style={{ color: "#007bff" }}>🌟 Ofertas Escolhidas para Você</h2>
-          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-            {recommended.map((product) => (
-              <div key={product._id} className="card" style={{ border: "1px solid #ddd", padding: "10px", width: "200px" }}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p><strong>{formatCurrency(product.price)}</strong></p>
-                <button>Comprar</button>
-              </div>
+      <main className="home-content">
+        <section className="hero">
+          <div>
+            <h2>Crie sua conta e desbloqueie descontos exclusivos!</h2>
+            <p>Cadastre-se em segundos e aproveite cupons, promoções e ofertas personalizadas para economizar nas suas compras.</p>
+          </div>
+          <div>
+            <button className="cta" onClick={() => {
+              const token = localStorage.getItem('token');
+              if (token) navigate('/home'); else navigate('/login');
+            }}>Ver Ofertas</button>
+          </div>
+        </section>
+
+        {promotions.length > 0 && (
+          <section className="promo-band">
+            <h3>Promoções</h3>
+            <div className="product-row">
+              {promotions.map((promo) => {
+                const product = promo.product;
+                const discounted = +(product.price * (1 - promo.discountPercentage / 100)).toFixed(2);
+                return (
+                  <article key={promo._id} className="product-card promo">
+                    <div className="product-media" aria-hidden>
+                      {product.image ? (
+                        <img src={imageUrl(product.image)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div className="thumb">Img</div>
+                      )}
+                    </div>
+                    <div className="product-body">
+                      <h4>{product.name}</h4>
+                      <p className="muted">{product.description}</p>
+                      <div className="prices">
+                        <span className="old">{formatCurrency(product.price)}</span>
+                        <span className="new">{formatCurrency(discounted)}</span>
+                      </div>
+                      <button className="buy">Comprar</button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {recommended.length > 0 && (
+          <section>
+            <h3>Recomendados</h3>
+            <div className="product-grid">
+              {filtered(recommended).map((product) => (
+                <article key={product._id} className="product-card">
+                  <div className="product-media">{product.image ? <img src={imageUrl(product.image)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className="thumb">Img</div>}</div>
+                  <div className="product-body">
+                    <h4>{product.name}</h4>
+                    <p className="muted">{product.description}</p>
+                    <div className="prices"><span className="new">{formatCurrency(product.price)}</span></div>
+                    <button className="buy">Comprar</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section>
+          <h3>Todos os Produtos</h3>
+          <div className="product-grid">
+            {filtered(others).map((product) => (
+              <article key={product._id} className="product-card">
+                <div className="product-media">{product.image ? <img src={imageUrl(product.image)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className="thumb">Img</div>}</div>
+                <div className="product-body">
+                  <h4>{product.name}</h4>
+                  <p className="muted">{product.description}</p>
+                  <div className="prices"><span className="new">{formatCurrency(product.price)}</span></div>
+                  <button className="buy">Comprar</button>
+                </div>
+              </article>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* OUTROS PRODUTOS */}
-      <h2>Todos os Produtos</h2>
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        {others.map((product) => (
-          <div key={product._id} className="card" style={{ border: "1px solid #ddd", padding: "10px", width: "200px" }}>
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-            <p><strong>{formatCurrency(product.price)}</strong></p>
-            <button>Comprar</button>
-          </div>
-        ))}
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
