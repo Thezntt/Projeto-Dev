@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "e22325e3-fa2d-4f55-a0cd-aae3825a464c",
+		"_postman_id": "8cac3e03-5376-4948-be41-02782a5413c7",
 		"name": "ecommerce-facisa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "46083875",
-		"_collection_link": "https://brenobarbosa-8228171.postman.co/workspace/facisa-ecommerce~9133ee91-a7d5-4804-a7ba-0575d7c6f75b/collection/46083875-e22325e3-fa2d-4f55-a0cd-aae3825a464c?action=share&source=collection_link&creator=46083875"
+		"_exporter_id": "50588631",
+		"_collection_link": "https://thezntt-7447413.postman.co/workspace/Tony-Tomaz's-Workspace~fff3d9fc-f758-48e4-8781-dc88ebf4f928/collection/50588631-8cac3e03-5376-4948-be41-02782a5413c7?action=share&source=collection_link&creator=50588631"
 	},
 	"item": [
 		{
@@ -287,7 +287,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJydW5vQG1haWwuY29tIiwiaWF0IjoxNzY0ODQ3ODUyLCJleHAiOjE3NjQ4NTE0NTJ9.xv21e7bYSTIu_yuPsNTVmDlsigkt1bgpA_X_0pWeCaU",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRoZXpudDMwNEBnbWFpbC5jb20iLCJpYXQiOjE3NjQ4ODkzNzAsImV4cCI6MTc2NDg5Mjk3MH0.3_9YdVYb6ZMBkqn9u7td6FVclk_A1nVBwOLEPkk",
 									"type": "string"
 								}
 							]
@@ -296,7 +296,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"rice 1kg\",\r\n    \"description\": \"1 Kilogram of Chinese Rice\",\r\n    \"price\": 10.00,\r\n    \"countInStock\": 100,\r\n    \"expirationDate\": \"2026/12/21\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Arroz\",\r\n  \"price\": 20.50,\r\n  \"category\": \"alimentos\",\r\n  \"description\": \"Saco de 5kg\",\r\n  \"expirationDate\": \"2024-12-31\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -304,13 +304,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/product",
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
 							"host": [
-								"{{url}}"
+								"localhost"
 							],
+							"port": "3000",
 							"path": [
 								"api",
-								"product"
+								"products"
 							]
 						}
 					},
